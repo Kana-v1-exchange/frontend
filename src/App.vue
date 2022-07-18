@@ -14,14 +14,15 @@ export default {
 </script>
 
 <style>
-html body{
+html body {
   height: 100vh;
   padding: 0;
   margin: 0;
+  color: white;
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
