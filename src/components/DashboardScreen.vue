@@ -19,23 +19,6 @@
                     </a-table>
                 </div>
             </a-col>
-            <a-col :span="11" class="col">
-                <div class="oneEl">Amount Story</div>
-            </a-col>
-
-            <a-col :span="4" class="col">
-                <div class="oneEl">
-                    <h3>BALANCES</h3>
-                    <a-table :columns="balanceColumns" :pagination="false" :data-source="balanceValue"
-                        class="ant-table-striped"
-                        :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-even' : 'table-odd')"
-                        :scroll="{ x: 200, y: 190 }">
-                    </a-table>
-                </div>
-            </a-col>
-        </a-row>
-
-        <a-row type="flex" justify="space-around" align="middle" class="row">
             <a-col :span="8" class="col">
                 <div class="oneEl">
                     <h3>TRADE HISTORY</h3>
@@ -54,6 +37,39 @@
                 </div>
             </a-col>
 
+            <a-col :span="4" class="col">
+                <div class="oneEl">
+                    <div class="header">
+                        <h3>BALANCES</h3>
+                        <a-avatar :size="30" style="background-color: #434352" @click="showModal">
+                            <template #icon>
+                                <UserOutlined />
+                            </template>
+                        </a-avatar>
+                        <a-modal v-model:visible="visible" style="width: 200px; height: 200px;" centered>
+                            <template #footer ></template>
+                            <div class="btn modalBtn">
+                                <a-button type="primary" shape="round" :size="size">
+                                    Change account
+                                </a-button>
+                            </div>
+                            <div class="btn modalBtn">
+                                <a-button type="primary" shape="round" :size="size">
+                                    Sign out
+                                </a-button>
+                            </div>
+                        </a-modal>
+                    </div>
+                    <a-table :columns="balanceColumns" :pagination="false" :data-source="balanceValue"
+                        class="ant-table-striped"
+                        :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-even' : 'table-odd')"
+                        :scroll="{ x: 200, y: 190 }">
+                    </a-table>
+                </div>
+            </a-col>
+        </a-row>
+
+        <a-row type="flex" justify="space-around" align="middle" class="row">
             <a-col :span="6" class="col">
                 <div class="oneEl trade sell">
                     <h3>SELL</h3>
@@ -86,8 +102,8 @@
                             <div class="tradeChild">
                                 <div class="name">Boundaries</div>
                                 <div class="input">
-                                    <a-input v-model:value="sellBoundaries" class="field" :bordered="false" placeholder="0"
-                                        addon-after="USD">
+                                    <a-input v-model:value="sellBoundaries" class="field" :bordered="false"
+                                        placeholder="0" addon-after="USD">
                                     </a-input>
                                 </div>
                             </div>
@@ -190,8 +206,26 @@
 
 <script>
 import { ref } from 'vue'
+import { UserOutlined } from '@ant-design/icons-vue';
+import {currencies} from '../grpc/handler'
 export default {
+    components: {
+        UserOutlined
+    },
     data() {
+        currencies()
+        
+        const visible = ref(false);
+
+        const showModal = () => {
+            visible.value = true;
+        };
+
+        const handleOk = e => {
+            console.log(e);
+            visible.value = false;
+        };
+
         return {
             currencies: ['USD', 'AUD', 'TAR', 'KRN', 'LOU'],
             marketColumns: [
@@ -346,6 +380,9 @@ export default {
             sellPrice: ref(0),
             buyBoundaries: ref(0.0),
             sellBoundaries: ref(0.0),
+            visible,
+            showModal,
+            handleOk,
 
         }
     }
@@ -379,6 +416,13 @@ export default {
     right: 30%;
     top: 5%;
     margin-bottom: 30px;
+}
+
+.oneEl .header {
+    position: relative;
+    top: 5%;
+    left: 40%;
+    display: flex;
 }
 
 .row {
@@ -490,6 +534,7 @@ tr {
 
 }
 
+
 .ant-select-arrow {
     color: white !important;
 }
@@ -539,5 +584,22 @@ tr {
 
 .sell .btn {
     top: 40px;
+}
+
+.modalBtn {
+    position: relative;
+    top: 30px;
+    left: 2px;
+    margin-bottom: 20px;
+}
+
+.ant-modal-content .ant-modal-footer {
+    background-color: #434352 !important;
+    border: 0;
+}
+
+.ant-modal-content {
+    background-color: #434352 !important;
+    border: 0;
 }
 </style>
