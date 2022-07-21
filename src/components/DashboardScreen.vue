@@ -207,13 +207,13 @@
 <script>
 import { ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue';
-import {currencies} from '../grpc/handler'
+import {getCurrencies} from '../grpc/handler'
 export default {
     components: {
         UserOutlined
     },
     data() {
-        currencies()
+        getCurrencies()
         
         const visible = ref(false);
 

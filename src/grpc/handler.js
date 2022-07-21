@@ -1,32 +1,19 @@
 /* eslint-disable no-unused-vars */
-let PROTO_PATH = './serverHandler.proto'
-import { loadPackageDefinition, credentials } from '@grpc/grpc-js'
-import { loadSync } from '@grpc/proto-loader'
+const { GetCurrenciesResponse, EmptyMsg } = require('./enviroment/protos/server_handler_pb')
+const { DashboardServiceClient } = require('./enviroment/protos/server_handler_grpc_web_pb')
 
-function init() {
-    let packageDefinition = loadSync(
-        PROTO_PATH,
-        {
-            keepCase: true,
-            longs: String,
-            enums: String,
-            defaults: true,
-            oneofs: true
+
+
+export function getCurrencies() {
+    const app = new DashboardServiceClient('http://localhost:11111', null, null)
+    const request = new EmptyMsg()
+    app.getAllCurrencies(request, {}, (err, response) => {
+        if (err) {
+            console.error(err);
+
+            return;
         }
-    )
-
-    let protoDescriptor = loadPackageDefinition(packageDefinition)
-    let dashboardService = protoDescriptor.dashboardservice
-    let stub = new dashboardService.DashboardService('localhost:9001', credentials.createInsecure())
-
-    return stub
-}
-
-function currencies() {
-    let stub = init()
-    stub.getAllCurrencies({}, function (err, currencies) {
-        console.log('err', err)
-        console.log('currencies', currencies)
+         console.log(response)
     })
-}
 
+}
