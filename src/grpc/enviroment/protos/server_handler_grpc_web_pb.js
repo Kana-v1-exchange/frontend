@@ -431,5 +431,127 @@ proto.serverHandler.DashboardServicePromiseClient.prototype.getCurrencyValue =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.serverHandler.EmptyMsg,
+ *   !proto.serverHandler.GetCurrenciesResponse>}
+ */
+const methodDescriptor_DashboardService_GetUserMoney = new grpc.web.MethodDescriptor(
+  '/serverHandler.DashboardService/GetUserMoney',
+  grpc.web.MethodType.UNARY,
+  proto.serverHandler.EmptyMsg,
+  proto.serverHandler.GetCurrenciesResponse,
+  /**
+   * @param {!proto.serverHandler.EmptyMsg} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.serverHandler.GetCurrenciesResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.serverHandler.EmptyMsg} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.serverHandler.GetCurrenciesResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.serverHandler.GetCurrenciesResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.serverHandler.DashboardServiceClient.prototype.getUserMoney =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/serverHandler.DashboardService/GetUserMoney',
+      request,
+      metadata || {},
+      methodDescriptor_DashboardService_GetUserMoney,
+      callback);
+};
+
+
+/**
+ * @param {!proto.serverHandler.EmptyMsg} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.serverHandler.GetCurrenciesResponse>}
+ *     Promise that resolves to the response
+ */
+proto.serverHandler.DashboardServicePromiseClient.prototype.getUserMoney =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/serverHandler.DashboardService/GetUserMoney',
+      request,
+      metadata || {},
+      methodDescriptor_DashboardService_GetUserMoney);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.serverHandler.EmptyMsg,
+ *   !proto.serverHandler.GetUserHistoryResponse>}
+ */
+const methodDescriptor_DashboardService_GetUserHistory = new grpc.web.MethodDescriptor(
+  '/serverHandler.DashboardService/GetUserHistory',
+  grpc.web.MethodType.UNARY,
+  proto.serverHandler.EmptyMsg,
+  proto.serverHandler.GetUserHistoryResponse,
+  /**
+   * @param {!proto.serverHandler.EmptyMsg} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.serverHandler.GetUserHistoryResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.serverHandler.EmptyMsg} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.serverHandler.GetUserHistoryResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.serverHandler.GetUserHistoryResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.serverHandler.DashboardServiceClient.prototype.getUserHistory =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/serverHandler.DashboardService/GetUserHistory',
+      request,
+      metadata || {},
+      methodDescriptor_DashboardService_GetUserHistory,
+      callback);
+};
+
+
+/**
+ * @param {!proto.serverHandler.EmptyMsg} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.serverHandler.GetUserHistoryResponse>}
+ *     Promise that resolves to the response
+ */
+proto.serverHandler.DashboardServicePromiseClient.prototype.getUserHistory =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/serverHandler.DashboardService/GetUserHistory',
+      request,
+      metadata || {},
+      methodDescriptor_DashboardService_GetUserHistory);
+};
+
+
 module.exports = proto.serverHandler;
 

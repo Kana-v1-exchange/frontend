@@ -47,17 +47,24 @@
                             </template>
                         </a-avatar>
                         <a-modal v-model:visible="visible" style="width: 200px; height: 200px;" centered>
-                            <template #footer ></template>
+                            <template #footer></template>
                             <div class="btn modalBtn">
                                 <a-button type="primary" shape="round" :size="size">
                                     Change account
                                 </a-button>
                             </div>
                             <div class="btn modalBtn">
-                                <a-button type="primary" shape="round" :size="size">
-                                    Sign out
+                                <a-button type="primary" shape="round" :size="size" @click="this.$store.dispatch('signUp', 'testEmail', 'testPassword')">
+                                    Sign up
                                 </a-button>
                             </div>
+
+                            <div class="btn modalBtn">
+                                <a-button type="primary" shape="round" :size="size" @click="this.$store.dispatch('signIn', 'testEmail', 'testPassword')">
+                                    Sign In
+                                </a-button>
+                            </div>
+
                         </a-modal>
                     </div>
                     <a-table :columns="balanceColumns" :pagination="false" :data-source="balanceValue"
@@ -207,14 +214,13 @@
 <script>
 import { ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue';
-import {getCurrencies} from '../grpc/handler'
 export default {
     components: {
         UserOutlined
     },
     data() {
-        getCurrencies()
-        
+        this.$store.commit('getUserMoney')
+
         const visible = ref(false);
 
         const showModal = () => {
@@ -385,7 +391,10 @@ export default {
             handleOk,
 
         }
-    }
+    },
+
+    methods: {
+    },
 }
 </script>
 
