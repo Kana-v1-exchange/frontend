@@ -17,7 +17,7 @@ export const store = createStore({
         },
 
         getUserMoney(state) {
-            state.dashboardService.getUserMoney(localStorage.getItem('userID'))
+            state.dashboardService.getUserMoney(localStorage.getItem('userID')).then(res => state.userMoney = res)
         }
     },
 

@@ -49,10 +49,15 @@ export class DashboardService {
         const request = new EmptyMsg()
 
         try {
-            const metadata = {'userID': '1'}
-            const res = await this.app.getUserMoney(request, metadata)
+            const res = await this.app.getUserMoney(request, { 'userID': userID })
 
-            console.log(res.getCurrencyvalueList())
+            const currencyList = res.getCurrencyvalueList()
+
+            return new Map(
+                currencyList.map(el => {
+                    return [el.getCurrency(), el.getValue()]
+                })
+            )
         } catch (err) {
             throw err.message
         }

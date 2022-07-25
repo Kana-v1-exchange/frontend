@@ -54,13 +54,15 @@
                                 </a-button>
                             </div>
                             <div class="btn modalBtn">
-                                <a-button type="primary" shape="round" :size="size" @click="this.$store.dispatch('signUp', 'testEmail', 'testPassword')">
+                                <a-button type="primary" shape="round" :size="size"
+                                    @click="this.$store.dispatch('signUp', 'testEmail', 'testPassword')">
                                     Sign up
                                 </a-button>
                             </div>
 
                             <div class="btn modalBtn">
-                                <a-button type="primary" shape="round" :size="size" @click="this.$store.dispatch('signIn', 'testEmail', 'testPassword')">
+                                <a-button type="primary" shape="round" :size="size"
+                                    @click="this.$store.dispatch('signIn', 'testEmail', 'testPassword')">
                                     Sign In
                                 </a-button>
                             </div>
@@ -221,6 +223,10 @@ export default {
     data() {
         this.$store.commit('getUserMoney')
 
+        setTimeout(() => console.log(this.$store.state.userMoney), 2000);
+
+
+
         const visible = ref(false);
 
         const showModal = () => {
@@ -300,32 +306,6 @@ export default {
                 }
             ],
 
-            balanceValue: [
-                {
-                    currency: 'USD',
-                    amount: 100,
-                },
-                {
-                    currency: 'AUD',
-                    amount: 5420,
-                },
-                {
-                    currency: 'TAR',
-                    amount: 125124,
-                },
-                {
-                    currency: 'KRN',
-                    amount: 78512,
-                },
-                {
-                    currency: 'LOU',
-                    amount: 124124124,
-                },
-                {
-                    currency: 'QOB',
-                    amount: 1231231231968,
-                },
-            ],
             tradeHistoryColumns: [
                 {
                     title: 'Time',
@@ -393,7 +373,12 @@ export default {
         }
     },
 
-    methods: {
+    computed: {
+        balanceValue() {
+            return Array.from(this.$store.state.userMoney, function (item) {
+                return { currency: item[0], amount: item[1] }
+            }).sort((a, b) => (a.currency < b.currency) ? 1 : 0)
+        }
     },
 }
 </script>
