@@ -1,3 +1,4 @@
+<!-- eslint-disable no-unused-vars -->
 <template>
     <div class="wrapper">
         <a-row type="flex" justify="space-around" align="middle" class="row">
@@ -55,14 +56,14 @@
                             </div>
                             <div class="btn modalBtn">
                                 <a-button type="primary" shape="round" :size="size"
-                                    @click="this.$store.dispatch('signUp', 'testEmail', 'testPassword')">
+                                    @click="this.$store.dispatch('signUp', { email: 'testemail', password: 'testPassword' })">
                                     Sign up
                                 </a-button>
                             </div>
 
                             <div class="btn modalBtn">
                                 <a-button type="primary" shape="round" :size="size"
-                                    @click="this.$store.dispatch('signIn', 'testEmail', 'testPassword')">
+                                    @click="this.$store.dispatch('signIn', { email: 'testemail', password: 'testPassword' })">
                                     Sign In
                                 </a-button>
                             </div>
@@ -119,17 +120,17 @@
                             <div class="tradeChild">
                                 <div class="name">Total</div>
                                 <div class="text">
-                                    {{ (amountToSell * (sellPrice - sellBoundaries) >= 0 ? amountToSell * (sellPrice -
-                                            sellBoundaries) :
+                                    {{ (calculatedAmountToSell * (calculatedSellPrice - calculatedSellBoundaries) >= 0 ? calculatedAmountToSell * (calculatedSellPrice -
+                                            calculatedSellBoundaries) :
                                             1)
                                     }} USD -
-                                    {{ amountToSell * (sellPrice + sellBoundaries) }} USD
+                                    {{ calculatedAmountToSell * (calculatedSellPrice + calculatedSellBoundaries) }} USD
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="btn">
-                        <a-button type="primary" shape="round" :size="size">
+                        <a-button type="primary" shape="round" :size="size" @click="sell">
                             SELL -
                         </a-button>
                     </div>
@@ -176,27 +177,32 @@
                             <div class="tradeChild">
                                 <div class="name">Fee (0,2%)</div>
                                 <div class="text">
-                                    {{ (amountToBuy * (buyPrice - buyBoundaries) >= 0 ? amountToBuy * (buyPrice -
-                                            buyBoundaries) :
+                                    {{ (calculatedAmountToBuy * (calculatedBuyPrice - calculatedBuyBoundaries) >= 0 ?
+                                            calculatedAmountToBuy * (calculatedBuyPrice -
+                                                calculatedBuyBoundaries) :
                                             1) *
-                                            0.002
+                                            0.02
                                     }} USD -
-                                    {{ (amountToBuy * (buyPrice + buyBoundaries)) * 0.002 }} USD
+                                    {{ (calculatedAmountToBuy * (calculatedBuyPrice + calculatedBuyBoundaries)) * 0.02
+                                    }} USD
                                 </div>
                             </div>
                             <div class="tradeChild">
                                 <div class="name">Total</div>
                                 <div class="text">
-                                    {{ (amountToBuy * (price - boundaries) >= 0 ? amountToBuy * (price - boundaries) :
+                                    {{ (calculatedAmountToBuy * (calculatedBuyPrice - calculatedBuyBoundaries) >= 0 ?
+                                            calculatedAmountToBuy
+                                            * (calculatedBuyPrice -
+                                                calculatedBuyBoundaries) :
                                             1)
                                     }} USD -
-                                    {{ amountToBuy * (price + boundaries) }} USD
+                                    {{ calculatedAmountToBuy * (calculatedBuyPrice + calculatedBuyBoundaries) }} USD
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="btn">
-                        <a-button type="primary" shape="round" :size="size">
+                        <a-button type="primary" shape="round" :size="size" @click="buy">
                             BUY +
                         </a-button>
                     </div>
@@ -214,172 +220,239 @@
 
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 import { UserOutlined } from '@ant-design/icons-vue';
 export default {
-    components: {
-        UserOutlined
-    },
-    data() {
-        this.$store.commit('getUserMoney')
-
-        setTimeout(() => console.log(this.$store.state.userMoney), 2000);
-
-
+    setup() {
+        const store = useStore()
+        store.commit('getUserMoney')
 
         const visible = ref(false);
+
 
         const showModal = () => {
             visible.value = true;
         };
 
-        const handleOk = e => {
-            console.log(e);
+        const handleOk = () => {
             visible.value = false;
         };
 
-        return {
-            currencies: ['USD', 'AUD', 'TAR', 'KRN', 'LOU'],
-            marketColumns: [
-                {
-                    title: 'Currency',
-                    dataIndex: 'currency'
-                },
-                {
-                    title: 'Value',
-                    dataIndex: 'value'
-                },
-                {
-                    title: 'Amount',
-                    dataIndex: 'amount'
-                },
-                {
-                    title: 'Change',
-                    dataIndex: 'change'
-                },
-            ],
-            marketData: [
-                {
-                    currency: 'USD',
-                    value: 1,
-                    amount: 100,
-                    change: '+1%'
-                },
-                {
-                    currency: 'AUD',
-                    value: 2,
-                    amount: 5420,
-                    change: '-0.96%'
-                },
-                {
-                    currency: 'TAR',
-                    value: 0.345,
-                    amount: 125124,
-                    change: '+0.425%'
-                },
-                {
-                    currency: 'KRN',
-                    value: 1.34,
-                    amount: 78512,
-                    change: '+0.597%',
-                },
-                {
-                    currency: 'LOU',
-                    value: 5.2,
-                    amount: 124124124,
-                    change: "+1.2%"
-                },
-                {
-                    currency: 'QOB',
-                    value: 0.012,
-                    amount: 1231231231968,
-                    change: '-0.124124%'
-                },
-            ],
+        const currencies = ['USD', 'AUD', 'TAR', 'KRN', 'LOU']
 
-            balanceColumns: [
-                {
-                    dataIndex: 'currency'
-                },
-                {
-                    dataIndex: 'amount',
-                }
-            ],
+        let amountToBuy = ref('0')
+        let amountToSell = ref('0')
+        let currencyToBuy = ref('AUD')
+        let currencyToSell = ref('AUD')
+        let buyPrice = ref('0')
+        let sellPrice = ref('0')
+        let buyBoundaries = ref('0')
+        let sellBoundaries = ref('0')
 
-            tradeHistoryColumns: [
-                {
-                    title: 'Time',
-                    dataIndex: 'time'
-                },
-                {
-                    title: 'Currency',
-                    dataIndex: 'currency'
-                },
-                {
-                    title: 'Price',
-                    dataIndex: 'price'
-                },
-                {
-                    title: 'Amount',
-                    dataIndex: 'amount'
-                },
-            ],
-
-            tradeHistoryData: [
-                {
-                    time: '2021-10-06 09:14:56',
-                    currency: 'AUD',
-                    price: 2,
-                    amount: 4
-                },
-                {
-                    time: '2021-11-10 21:14:56',
-                    currency: 'KRN',
-                    price: 1.35,
-                    amount: 25
-                },
-                {
-                    time: '2021-10-06 09:14:56',
-                    currency: 'LOU',
-                    price: 5.2,
-                    amount: 12
-                },
-                {
-                    time: '2021-10-06 09:14:56',
-                    currency: 'TAR',
-                    price: 0.34,
-                    amount: -35,
-                },
-                {
-                    time: '2021-10-06 09:14:56',
-                    currency: 'KRN',
-                    price: 2,
-                    amount: -30
-                }
-            ],
-
-            amountToBuy: ref(0),
-            amountToSell: ref(0),
-            currencyToBuy: ref('AUD'),
-            currencyToSell: ref('AUD'),
-            buyPrice: ref(0),
-            sellPrice: ref(0),
-            buyBoundaries: ref(0.0),
-            sellBoundaries: ref(0.0),
-            visible,
-            showModal,
-            handleOk,
-
-        }
-    },
-
-    computed: {
-        balanceValue() {
-            return Array.from(this.$store.state.userMoney, function (item) {
+        let balanceValue = computed(() => {
+            return Array.from(store.state.userMoney, function (item) {
                 return { currency: item[0], amount: item[1] }
             }).sort((a, b) => (a.currency < b.currency) ? 1 : 0)
+        })
+
+        let calculatedAmountToBuy = computed(() => {
+            return parseFloat(amountToBuy.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'))
+        })
+
+        let calculatedBuyPrice = computed(() => {
+            return parseFloat(buyPrice.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'))
+        })
+
+        let calculatedBuyBoundaries = computed(() => {
+            return parseFloat(buyBoundaries.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'))
+        })
+
+        let calculatedAmountToSell = computed(() => {
+            return parseFloat(amountToSell.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'))
+        })
+
+        let calculatedSellPrice = computed(() => {
+            return parseFloat(sellPrice.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'))
+        })
+
+        let calculatedSellBoundaries = computed(() => {
+            return parseFloat(sellBoundaries.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1'))
+        })
+
+
+
+        const buy = () => {
+            store.dispatch('buy', {
+                currency: currencyToBuy.value,
+                amount: calculatedAmountToBuy.value,
+                floorPrice: calculatedBuyPrice.value - calculatedBuyBoundaries.value,
+                ceilPrice: calculatedBuyPrice.value + calculatedBuyBoundaries.value
+            })
+        }
+
+        const sell = () => {
+            store.dispatch('sell', {
+                currency: currencyToSell.value,
+                amount: calculatedAmountToSell.value,
+                price: calculatedSellPrice.value
+            })
+        }
+
+        //#region 
+        const marketColumns = [
+            {
+                title: 'Currency',
+                dataIndex: 'currency'
+            },
+            {
+                title: 'Value',
+                dataIndex: 'value'
+            },
+            {
+                title: 'Amount',
+                dataIndex: 'amount'
+            },
+            {
+                title: 'Change',
+                dataIndex: 'change'
+            },
+        ]
+
+        const marketData = [
+            {
+                currency: 'USD',
+                value: 1,
+                amount: 100,
+                change: '+1%'
+            },
+            {
+                currency: 'AUD',
+                value: 2,
+                amount: 5420,
+                change: '-0.96%'
+            },
+            {
+                currency: 'TAR',
+                value: 0.345,
+                amount: 125124,
+                change: '+0.425%'
+            },
+            {
+                currency: 'KRN',
+                value: 1.34,
+                amount: 78512,
+                change: '+0.597%',
+            },
+            {
+                currency: 'LOU',
+                value: 5.2,
+                amount: 124124124,
+                change: "+1.2%"
+            },
+            {
+                currency: 'QOB',
+                value: 0.012,
+                amount: 1231231231968,
+                change: '-0.124124%'
+            },
+        ]
+
+        const balanceColumns = [
+            {
+                dataIndex: 'currency'
+            },
+            {
+                dataIndex: 'amount',
+            }
+        ]
+
+        const tradeHistoryColumns = [
+            {
+                title: 'Time',
+                dataIndex: 'time'
+            },
+            {
+                title: 'Currency',
+                dataIndex: 'currency'
+            },
+            {
+                title: 'Price',
+                dataIndex: 'price'
+            },
+            {
+                title: 'Amount',
+                dataIndex: 'amount'
+            },
+        ]
+
+        const tradeHistoryData = [
+            {
+                time: '2021-10-06 09:14:56',
+                currency: 'AUD',
+                price: 2,
+                amount: 4
+            },
+            {
+                time: '2021-11-10 21:14:56',
+                currency: 'KRN',
+                price: 1.35,
+                amount: 25
+            },
+            {
+                time: '2021-10-06 09:14:56',
+                currency: 'LOU',
+                price: 5.2,
+                amount: 12
+            },
+            {
+                time: '2021-10-06 09:14:56',
+                currency: 'TAR',
+                price: 0.34,
+                amount: -35,
+            },
+            {
+                time: '2021-10-06 09:14:56',
+                currency: 'KRN',
+                price: 2,
+                amount: -30
+            }
+        ]
+        //#endregion
+
+        return {
+            showModal,
+            handleOk,
+            amountToBuy,
+            amountToSell,
+            currencyToBuy,
+            currencyToSell,
+            buyPrice,
+            sellPrice,
+            buyBoundaries,
+            sellBoundaries,
+            currencies,
+            balanceValue,
+            calculatedAmountToBuy,
+            calculatedBuyPrice,
+            calculatedBuyBoundaries,
+            visible,
+            buy,
+            calculatedAmountToSell,
+            calculatedSellPrice,
+            calculatedSellBoundaries,
+            sell,
+
+            marketColumns,
+            marketData,
+            balanceColumns,
+            tradeHistoryColumns,
+            tradeHistoryData
         }
     },
+    components: {
+        UserOutlined
+    }
 }
 </script>
 

@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-redeclare */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 // source: enviroment/protos/server_handler.proto
 /**
@@ -830,7 +830,10 @@ proto.serverHandler.SellOperation.prototype.toObject = function(opt_includeInsta
 proto.serverHandler.SellOperation.toObject = function(includeInstance, msg) {
   var f, obj = {
     userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    currencyvalue: (f = msg.getCurrencyvalue()) && proto.serverHandler.CurrencyValue.toObject(includeInstance, f)
+    currency: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    floorprice: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+    ceilprice: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+    amount: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
   };
 
   if (includeInstance) {
@@ -872,9 +875,20 @@ proto.serverHandler.SellOperation.deserializeBinaryFromReader = function(msg, re
       msg.setUserid(value);
       break;
     case 2:
-      var value = new proto.serverHandler.CurrencyValue;
-      reader.readMessage(value,proto.serverHandler.CurrencyValue.deserializeBinaryFromReader);
-      msg.setCurrencyvalue(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCurrency(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readFloat());
+      msg.setFloorprice(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readFloat());
+      msg.setCeilprice(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readFloat());
+      msg.setAmount(value);
       break;
     default:
       reader.skipField();
@@ -912,12 +926,32 @@ proto.serverHandler.SellOperation.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getCurrencyvalue();
-  if (f != null) {
-    writer.writeMessage(
+  f = message.getCurrency();
+  if (f.length > 0) {
+    writer.writeString(
       2,
-      f,
-      proto.serverHandler.CurrencyValue.serializeBinaryToWriter
+      f
+    );
+  }
+  f = message.getFloorprice();
+  if (f !== 0.0) {
+    writer.writeFloat(
+      3,
+      f
+    );
+  }
+  f = message.getCeilprice();
+  if (f !== 0.0) {
+    writer.writeFloat(
+      4,
+      f
+    );
+  }
+  f = message.getAmount();
+  if (f !== 0.0) {
+    writer.writeFloat(
+      5,
+      f
     );
   }
 };
@@ -942,39 +976,74 @@ proto.serverHandler.SellOperation.prototype.setUserid = function(value) {
 
 
 /**
- * optional CurrencyValue CurrencyValue = 2;
- * @return {?proto.serverHandler.CurrencyValue}
+ * optional string currency = 2;
+ * @return {string}
  */
-proto.serverHandler.SellOperation.prototype.getCurrencyvalue = function() {
-  return /** @type{?proto.serverHandler.CurrencyValue} */ (
-    jspb.Message.getWrapperField(this, proto.serverHandler.CurrencyValue, 2));
+proto.serverHandler.SellOperation.prototype.getCurrency = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * @param {?proto.serverHandler.CurrencyValue|undefined} value
- * @return {!proto.serverHandler.SellOperation} returns this
-*/
-proto.serverHandler.SellOperation.prototype.setCurrencyvalue = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
+ * @param {string} value
  * @return {!proto.serverHandler.SellOperation} returns this
  */
-proto.serverHandler.SellOperation.prototype.clearCurrencyvalue = function() {
-  return this.setCurrencyvalue(undefined);
+proto.serverHandler.SellOperation.prototype.setCurrency = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * Returns whether this field is set.
- * @return {boolean}
+ * optional float floorPrice = 3;
+ * @return {number}
  */
-proto.serverHandler.SellOperation.prototype.hasCurrencyvalue = function() {
-  return jspb.Message.getField(this, 2) != null;
+proto.serverHandler.SellOperation.prototype.getFloorprice = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.serverHandler.SellOperation} returns this
+ */
+proto.serverHandler.SellOperation.prototype.setFloorprice = function(value) {
+  return jspb.Message.setProto3FloatField(this, 3, value);
+};
+
+
+/**
+ * optional float ceilPrice = 4;
+ * @return {number}
+ */
+proto.serverHandler.SellOperation.prototype.getCeilprice = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 4, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.serverHandler.SellOperation} returns this
+ */
+proto.serverHandler.SellOperation.prototype.setCeilprice = function(value) {
+  return jspb.Message.setProto3FloatField(this, 4, value);
+};
+
+
+/**
+ * optional float amount = 5;
+ * @return {number}
+ */
+proto.serverHandler.SellOperation.prototype.getAmount = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 5, 0.0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.serverHandler.SellOperation} returns this
+ */
+proto.serverHandler.SellOperation.prototype.setAmount = function(value) {
+  return jspb.Message.setProto3FloatField(this, 5, value);
 };
 
 

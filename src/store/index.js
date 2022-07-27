@@ -22,15 +22,34 @@ export const store = createStore({
     },
 
     actions: {
-        signUp({ commit, state }, email, password) {
-            state.dashboardService.signUp(email, password).then(res => console.log(res))
+        signUp({ commit, state }, data) {
+            state.dashboardService.signUp(data.email, data.password).then(res => console.log(res))
         },
 
-        signIn({ commit, state }, email, password) {
-            state.dashboardService.signIn(email, password).then(res => {
+        signIn({ commit, state }, data) {
+            state.dashboardService.signIn(data.email, data.password).then(res => {
                 localStorage.setItem("userID", res)
                 location.reload()
             })
+        },
+
+        buy({ commit, state }, data) {
+            state.dashboardService.buyCurrency(
+                localStorage.getItem('userID'),
+                data.currency,
+                data.amount,
+                data.floorPrice,
+                data.ceilPrice,
+            ).then(res => console.log(res))
+        },
+
+        sell({ commit, state }, data) {
+            state.dashboardService.sellCurrency(
+                localStorage.getItem('userID'),
+                data.currency,
+                data.amount,
+                data.price,
+            ).then(res => console.log(res))
         }
     }
 })
